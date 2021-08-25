@@ -1,3 +1,5 @@
+const path = require('path');
+
 const routes = (handler) => [
   {
     method: 'POST',
@@ -11,7 +13,15 @@ const routes = (handler) => [
         maxBytes: 500000,
       },
     },
-
+  },
+  {
+    method: 'GET',
+    path: '/users/profile_picture/{param*}',
+    handler: {
+      directory: {
+        path: path.resolve(__dirname, 'file/pictures'),
+      },
+    },
   },
 
 ];

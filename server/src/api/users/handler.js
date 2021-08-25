@@ -21,7 +21,10 @@ class UsersHandler {
     const newFilename = await this._storageService.generateFileName(profile_picture.hapi);
 
     const userId = await this._service.addUser({
-      fullname, email, password, profile_picture: newFilename
+      fullname,
+      email,
+      password,
+      profile_picture: newFilename
     });
 
     await this._storageService.writeFile(profile_picture, newFilename);

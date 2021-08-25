@@ -1,6 +1,8 @@
 require('dotenv').config();
 
 const Hapi = require('@hapi/hapi');
+const Jwt = require('@hapi/jwt');
+const Inert = require('@hapi/inert');
 const path = require('path');
 const ClientError = require('./exceptions/ClientError');
 
@@ -16,11 +18,30 @@ const AuthenticationsService = require('./services/postgres/AuthenticationsServi
 const { TokenManager } = require('./lib');
 const AuthenticationsValidator = require('./validator/authentications');
 
-const usersService = new UsersService();
-const authenticationsService = new AuthenticationsService();
-const storageService = new StorageService(
+// Invitations
+const invitations = require('./api/invitations');
+const InvitationsService = require('./services/postgres/InvitationsService');
+const InvitationsValidator = require('./validator/invitations');
+
+/**
+ * Storage Services
+ */
+
+const profilePicturesStorage = new StorageService(
   path.resolve(__dirname, 'api/users/file/pictures'),
 );
+
+const invitationImagesStorage = new StorageService(
+  path.resolve(__dirname, 'api/invitations/file/pictures'),
+);
+
+/**
+ * Main Services
+ */
+
+const usersService = new UsersService();
+const authenticationsService = new AuthenticationsService();
+const invitationsService = new InvitationsService();
 
 const init = async () => {
   const server = Hapi.server({
@@ -31,6 +52,33 @@ const init = async () => {
         origin: ['*'],
       },
     },
+  });
+
+  // Registering the external plugin
+  await server.register([
+    {
+      plugin: Jwt,
+    },
+    {
+      plugin: Inert,
+    },
+  ]);
+
+  // defining authentication strategy
+  server.auth.strategy('nostalgeek_jwt', 'jwt', {
+    keys: process.env.ACCESS_TOKEN_KEY,
+    verify: {
+      aud: false,
+      iss: false,
+      sub: false,
+      maxAgeSec: process.env.ACCESS_TOKEN_AGE,
+    },
+    validate: (artifacts) => ({
+      isValid: true,
+      credentials: {
+        id: artifacts.decoded.payload.id,
+      },
+    }),
   });
 
   server.ext('onPreResponse', (request, h) => {
@@ -57,7 +105,7 @@ const init = async () => {
       plugin: users,
       options: {
         service: usersService,
-        storageService,
+        storageService: profilePicturesStorage,
         validator: UsersValidator,
       },
     },
@@ -69,6 +117,15 @@ const init = async () => {
         usersService,
         tokenManager: TokenManager,
         validator: AuthenticationsValidator,
+      },
+    },
+
+    {
+      plugin: invitations,
+      options: {
+        service: invitationsService,
+        storageService: invitationImagesStorage,
+        validator: InvitationsValidator,
       },
     },
 
