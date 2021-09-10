@@ -10,12 +10,21 @@ class StorageService {
   }
 
   generateFileName(meta) {
-    return `${+new Date()}-${meta.filename}`;
+    const randomIdentifier = `${Math.round(Math.random() * 100)}${+new Date()}`;
+    return `${randomIdentifier}-${meta.filename}`;
+  }
+
+  removeFile(fileName) {
+    const path = `${this._folder}/${fileName}`;
+
+    fs.unlink(path, (err) => {
+      if (err) throw err;
+      console.log(`${fileName} was deleted`);
+    });
   }
 
   writeFile(file, fileName) {
     const path = `${this._folder}/${fileName}`;
-
     const fileStream = fs.createWriteStream(path);
 
     return new Promise((resolve, reject) => {

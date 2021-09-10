@@ -4,7 +4,12 @@ const UserPayloadSchema = Joi.object({
   fullname: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string().required(),
-  profile_picture: Joi.object().required()
+  confirm_password: Joi.string().equal(Joi.ref('password')),
+});
+
+const UserProfilePayloadSchema = Joi.object({
+  fullname: Joi.string().required(),
+  email: Joi.string().email().required(),
 });
 
 const ProfilePictureSchema = Joi.object({
@@ -15,9 +20,10 @@ const ProfilePictureSchema = Joi.object({
       'image/gif',
       'image/jpeg',
       'image/png',
-      'image/webp'
+      'image/webp',
+      'svg'
     )
     .required()
 }).unknown();
 
-module.exports = { UserPayloadSchema, ProfilePictureSchema };
+module.exports = { UserPayloadSchema, UserProfilePayloadSchema, ProfilePictureSchema };

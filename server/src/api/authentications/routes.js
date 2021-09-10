@@ -6,7 +6,7 @@ const routes = (handler) => [
   },
   {
     method: 'PUT',
-    path: '/users/refreshAuth',
+    path: '/users/refresh-auth',
     handler: handler.putAuthenticationHandler,
   },
   {

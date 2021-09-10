@@ -4,7 +4,17 @@ const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
 const Inert = require('@hapi/inert');
 const path = require('path');
+const Vision = require('@hapi/vision');
+const HapiSwagger = require('hapi-swagger');
+
 const ClientError = require('./exceptions/ClientError');
+
+const swaggerOptions = {
+  info: {
+    title: 'Nostalgeek API Documentation',
+    version: '0.0.1',
+  },
+};
 
 // Users
 const users = require('./api/users');
@@ -23,25 +33,46 @@ const invitations = require('./api/invitations');
 const InvitationsService = require('./services/postgres/InvitationsService');
 const InvitationsValidator = require('./validator/invitations');
 
+// Likes
+const likes = require('./api/likes');
+const LikesService = require('./services/postgres/LikesService');
+
+// Comments
+const comments = require('./api/comments');
+const CommentsService = require('./services/postgres/CommentsService');
+const CommentsValidator = require('./validator/comments');
+
+// Caching Service
+const CacheService = require('./services/redis/CacheService');
+
 /**
  * Storage Services
  */
 
 const profilePicturesStorage = new StorageService(
-  path.resolve(__dirname, 'api/users/file/pictures'),
+  path.resolve(__dirname, 'api/users/file/pictures')
 );
 
 const invitationImagesStorage = new StorageService(
-  path.resolve(__dirname, 'api/invitations/file/pictures'),
+  path.resolve(__dirname, 'api/invitations/file/pictures')
 );
 
 /**
  * Main Services
  */
 
-const usersService = new UsersService();
+const cacheService = new CacheService();
+
+const invitationsService = new InvitationsService(
+  invitationImagesStorage,
+  cacheService
+);
+
+const usersService = new UsersService(profilePicturesStorage, cacheService);
 const authenticationsService = new AuthenticationsService();
-const invitationsService = new InvitationsService();
+
+const likesService = new LikesService(cacheService);
+const commentsService = new CommentsService();
 
 const init = async () => {
   const server = Hapi.server({
@@ -61,6 +92,9 @@ const init = async () => {
     },
     {
       plugin: Inert,
+    },
+    {
+      plugin: Vision,
     },
   ]);
 
@@ -102,10 +136,13 @@ const init = async () => {
 
   await server.register([
     {
+      plugin: HapiSwagger,
+      options: swaggerOptions,
+    },
+    {
       plugin: users,
       options: {
         service: usersService,
-        storageService: profilePicturesStorage,
         validator: UsersValidator,
       },
     },
@@ -124,11 +161,24 @@ const init = async () => {
       plugin: invitations,
       options: {
         service: invitationsService,
-        storageService: invitationImagesStorage,
         validator: InvitationsValidator,
       },
     },
 
+    {
+      plugin: comments,
+      options: {
+        service: commentsService,
+        validator: CommentsValidator,
+      },
+    },
+
+    {
+      plugin: likes,
+      options: {
+        service: likesService,
+      },
+    },
   ]);
 
   await server.start();

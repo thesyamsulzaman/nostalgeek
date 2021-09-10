@@ -13,10 +13,7 @@ class AuthenticationHandler {
   async postAuthenticationHandler(request, h) {
     this._validator.validatePostAuthenticationPayload(request.payload);
     const { email, password } = request.payload;
-    const id = await this._usersService.verifyUserCredential(
-      email,
-      password,
-    );
+    const id = await this._usersService.verifyUserCredential(email, password);
 
     const accessToken = this._tokenManager.generateAccessToken({ id });
     const refreshToken = this._tokenManager.generateRefreshToken({ id });
@@ -26,6 +23,7 @@ class AuthenticationHandler {
       status: 'success',
       message: 'User successfully authenticated',
       data: {
+        user: {},
         accessToken,
         refreshToken,
       },
