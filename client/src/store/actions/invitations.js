@@ -6,8 +6,8 @@ import {
   EDIT_INVITATION,
   LIKE_INVITATION,
   UNLIKE_INVITATION,
+  LOADING_INVITATIONS,
 } from "../constants/invitations";
-import { API } from "../constants/middlewares";
 import { SET_ERRORS, CLEAR_ERRORS, LOADING_UI } from "../constants/ui";
 
 import { tokenConfig } from "./user";
@@ -43,7 +43,7 @@ const BASE_URL = "http://localhost:5000/invitations";
 
 export const getAllInvitations = () => async (dispatch) => {
   try {
-    dispatch({ type: LOADING_UI });
+    dispatch({ type: LOADING_INVITATIONS });
 
     const response = await fetch(`${BASE_URL}`);
     const jsonResponse = await response.json();

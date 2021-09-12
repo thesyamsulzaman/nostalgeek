@@ -82,11 +82,13 @@ class Profile extends Component {
 
     return (
       <SidebarWrapper>
-        {!loading ? (
-          this.renderProfileLayout(information, invitations)
-        ) : (
-          <p>Loading ...</p>
-        )}
+        <Container>
+          {loading ? (
+            <p>Loading ...</p>
+          ) : (
+            this.renderProfileLayout(information, invitations)
+          )}
+        </Container>
       </SidebarWrapper>
     );
   }

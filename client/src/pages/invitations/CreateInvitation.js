@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Form as FinalForm, Field } from "react-final-form";
-import { Container, Header, Form, Message, Button } from "semantic-ui-react";
+import { Container, Header } from "semantic-ui-react";
 import { connect } from "react-redux";
 
 import SidebarWrapper from "../../containers/SidebarWrapper";

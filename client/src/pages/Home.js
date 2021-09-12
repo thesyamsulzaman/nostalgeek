@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Container, Header } from "semantic-ui-react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 import SidebarWrapper from "../containers/SidebarWrapper";
 import InvitationCard from "../components/InvitationCard";
@@ -14,7 +15,17 @@ class Home extends Component {
 
   renderInvitations(invitations) {
     return invitations.map((invitation) => (
-      <InvitationCard key={invitation.id} invitation={invitation} />
+      <InvitationCard
+        key={invitation.id}
+        invitation={invitation}
+        actions={
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Link style={{ marginLeft: ".5em", fontSize: "1rem" }} to="/user">
+              {invitation.userFullName}
+            </Link>
+          </div>
+        }
+      />
     ));
   }
 

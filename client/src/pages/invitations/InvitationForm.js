@@ -13,18 +13,31 @@ class InvitationForm extends Component {
         onSubmit={onSubmit}
         render={({ handleSubmit }) => (
           <Form error onSubmit={handleSubmit}>
-            <Field name="title" validate={required}>
+            <Field
+              name="title"
+              validate={composeValidators(
+                required("Title"),
+                minLength("Title", 10),
+                maxLength("Title", 100)
+              )}
+            >
               {({ input, meta }) => (
                 <Form.Field>
                   <label htmlFor="">Title *</label>
-                  <input {...input} type="text" placeholder="First Name" />
+                  <input {...input} type="text" placeholder="Title" />
                   {meta.error && meta.touched && (
                     <Message error content={meta.error} />
                   )}
                 </Form.Field>
               )}
             </Field>
-            <Field name="body" validate={required}>
+            <Field
+              name="body"
+              validate={composeValidators(
+                required("Body"),
+                minLength("Body", 20)
+              )}
+            >
               {({ input, meta }) => (
                 <Form.Field>
                   <label htmlFor="">Body *</label>
@@ -71,12 +84,18 @@ InvitationForm.propTypes = {
   initialState: PropTypes.object,
 };
 
-const required = (value) => (value ? undefined : "Required");
+const required = (field) => (value) =>
+  value ? undefined : `${field} is Required`;
 
-const mustBeNumber = (value) => (isNaN(value) ? "Must be a number" : undefined);
+const minLength = (field, min) => (value) =>
+  value.trim().length >= min
+    ? undefined
+    : `${field} should be greater than ${min}`;
 
-const minValue = (min) => (value) =>
-  isNaN(value) || value >= min ? undefined : `Should be greater than ${min}`;
+const maxLength = (field, max) => (value) =>
+  value.trim().length <= max
+    ? undefined
+    : `${field} should be less than ${max}`;
 
 const composeValidators =
   (...validators) =>

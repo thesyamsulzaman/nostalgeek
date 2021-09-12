@@ -1,9 +1,4 @@
-import {
-  LOADING_USER,
-  SET_AUTHENTICATED,
-  SET_UNAUTHENTICATED,
-  SET_USER,
-} from "../constants/user";
+import { LOADING_USER, SET_UNAUTHENTICATED, SET_USER } from "../constants/user";
 
 import { SET_ERRORS, CLEAR_ERRORS, LOADING_UI } from "../constants/ui";
 
@@ -60,6 +55,7 @@ export const login =
   ({ email, password }, history) =>
   async (dispatch) => {
     dispatch({ type: LOADING_UI });
+    dispatch({ type: LOADING_USER });
 
     try {
       const response = await fetch(`${BASE_URL}/login`, {
@@ -123,6 +119,8 @@ export const logout = () => (dispatch) => {
 
 export const editUserInfo = (user, history) => async (dispatch, getState) => {
   dispatch({ type: LOADING_UI });
+  dispatch({ type: LOADING_USER });
+
   const { headers } = tokenConfig(getState);
 
   delete headers["Content-Type"];
@@ -137,6 +135,7 @@ export const editUserInfo = (user, history) => async (dispatch, getState) => {
 
   if (jsonResponse.status === "success") {
     dispatch({ type: CLEAR_ERRORS });
+    dispatch(getUserInfo());
     history.push(`/user/profile`);
   } else {
     dispatch({ type: SET_ERRORS, payload: jsonResponse.message });

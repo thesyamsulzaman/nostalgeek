@@ -3,6 +3,7 @@ import {
   SET_AUTHENTICATED,
   SET_UNAUTHENTICATED,
   LOADING_USER,
+  EDIT_USER,
 } from "../constants/user";
 
 import {
@@ -29,6 +30,7 @@ const initialState = {
 
 const usersReducer = (user = initialState, action) => {
   switch (action.type) {
+    case EDIT_USER:
     case SET_USER:
       return {
         ...user,
@@ -59,6 +61,14 @@ const usersReducer = (user = initialState, action) => {
         loading: true,
       };
 
+    case DELETE_INVITATION:
+      return {
+        ...user,
+        invitations: {
+          ..._omit(user.invitations, action.payload.id),
+        },
+      };
+
     case SET_INVITATION:
     case EDIT_INVITATION:
     case CREATE_INVITATION:
@@ -67,14 +77,6 @@ const usersReducer = (user = initialState, action) => {
         invitations: {
           ...user.invitations,
           [action.payload.id]: action.payload,
-        },
-      };
-
-    case DELETE_INVITATION:
-      return {
-        ...user,
-        invitations: {
-          ..._omit(user.invitations, action.payload.id),
         },
       };
 

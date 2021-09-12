@@ -11,6 +11,7 @@ import EditForm from "./pages/user/EditProfile";
 import CreateInvitation from "./pages/invitations/CreateInvitation";
 import EditInvitation from "./pages/invitations/EditInvitation";
 import DeleteInvitation from "./pages/invitations/DeleteInvitation";
+import ShowInvitation from "./pages/invitations/ShowInvitation";
 
 import PrivateRoute from "./utils/PrivateRoute";
 import store from "./store";
@@ -26,6 +27,7 @@ class App extends Component {
       <Router>
         <Switch>
           <Route path="/" exact component={Home} />
+          <Route path="/invitations/:id" exact component={ShowInvitation} />
 
           <Route exact path="/user/login" component={Login} />
           <Route exact path="/user/register" component={Register} />

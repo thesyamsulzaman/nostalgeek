@@ -5,11 +5,15 @@ const mapInvitationData = ({
   inserted_at,
   updated_at,
   image,
+  fullname,
+  profile_picture,
   ...rest
 }) => ({
   id,
   image,
   imageUrl: `http://${process.env.HOST}:${process.env.PORT}/invitations/${id}/images/${image}`,
+  userProfilePictureUrl: `http://${process.env.HOST}:${process.env.PORT}/users/info/profile-pictures/${profile_picture}`,
+  userFullName: fullname,
   likeCount: like_count,
   commentCount: comment_count,
   insertedAt: inserted_at,

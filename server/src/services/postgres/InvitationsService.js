@@ -5,6 +5,7 @@ const InvariantError = require('../../exceptions/InvariantError');
 const AuthorizationError = require('../../exceptions/AuthorizationError');
 
 const { mapInvitationData } = require('../../utils/mappers');
+const slowRequestMock = require('../../utils/slowRequestMock');
 
 class InvitationsService {
   constructor(storageService, cacheService) {
@@ -63,8 +64,14 @@ class InvitationsService {
     // const results = //await this._cacheService.get('invitations');
     // return JSON.parse(results);
     // } catch (error) {
-    const results = await this._pool.query('SELECT * FROM invitations ', []);
+    const results = await this._pool.query(`
+      SELECT users.fullname, users.profile_picture, invitations.*
+      FROM invitations
+      JOIN users ON users.id = invitations.owner
+    `);
+
     const mappedResults = results.rows.map(mapInvitationData);
+
     // await this._cacheService.set(
     //   'invitations',
     //   JSON.stringify(mappedResults)

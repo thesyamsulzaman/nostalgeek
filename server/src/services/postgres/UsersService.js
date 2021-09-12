@@ -6,12 +6,15 @@ const InvariantError = require('../../exceptions/InvariantError');
 const AuthenticationError = require('../../exceptions/AuthenticationError');
 const NotFoundError = require('../../exceptions/NotFoundError');
 
+const slowRequestMock = require('../../utils/slowRequestMock');
+
 const {
   mapLikeData,
   mapUserData,
   mapInvitationData,
   mapUserInfoData,
 } = require('../../utils/mappers');
+const slowRequest = require('../../utils/slowRequestMock');
 
 class UsersService {
   constructor(storageService, cacheService) {
@@ -128,6 +131,7 @@ class UsersService {
     if (!userResult.rowCount) {
       throw new NotFoundError('User is not found');
     }
+    const slowMockRequest = slowRequest(5000);
 
     const user = {
       information: mapUserData(userResult.rows[0]),

@@ -25,10 +25,8 @@ describe("Testing Redux integrated Component", () => {
           <InvitationCard
             invitation={{ title: "", body: "", likeCount: 0, commentCount: 0 }}
             user={{}}
-            authenticated={true}
             likeInvitation={() => {}}
             unlikeInvitation={() => {}}
-            loading={true}
           />
         </Router>
       </Provider>

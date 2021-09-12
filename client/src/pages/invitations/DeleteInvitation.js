@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Header, Modal, Button } from "semantic-ui-react";
+import { Container, Modal, Button } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -16,7 +16,6 @@ class DeleteInvitation extends Component {
   render() {
     const { open } = this.state;
 
-    console.log(this.props);
     return (
       <SidebarWrapper>
         <Container style={{ minHeight: "100vh", padding: "1em 0" }}>
@@ -24,7 +23,6 @@ class DeleteInvitation extends Component {
             onClose={() => this.setState({ open: false })}
             onOpen={() => this.setState({ open: true })}
             open={open}
-            trigger={<Button>Show Modal</Button>}
             size="mini"
           >
             <Modal.Header>Are you sure ?</Modal.Header>
