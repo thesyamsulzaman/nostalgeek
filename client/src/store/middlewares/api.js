@@ -1,3 +1,5 @@
+import { CLEAR_ERRORS, LOADING_UI, SET_ERRORS } from "../constants/ui";
+
 const apiMiddleware =
   ({ dispatch }) =>
   (next) =>
@@ -5,18 +7,40 @@ const apiMiddleware =
     next(action);
 
     if (action.type === "API") {
-      const { url, onSuccess, onFailure, onError } = action.payload;
+      const {
+        url,
+        onSuccess,
+        onAfterSuccess,
+        onFailure,
+        onError,
+        method = "GET",
+        headers = {},
+        body = {},
+      } = action.payload;
 
-      fetch(process.env.BASE_URL + url)
-        .then((response) => response.json())
-        .then((response) => {
-          if (response.status === "success") {
-            dispatch(onSuccess(response.data));
+      dispatch({ type: LOADING_UI });
+
+      fetch(process.env.BASE_URL + url, {
+        method,
+        body,
+        headers,
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.status === "success") {
+            dispatch(onSuccess(res.data));
+            dispatch({ type: CLEAR_ERRORS });
+
+            dispatch(onAfterSuccess);
           } else {
-            dispatch(onFailure(response.message));
+            dispatch(onFailure(res.message));
+            dispatch({ type: SET_ERRORS, payload: res.message });
           }
         })
-        .catch((error) => dispatch(onError(error)));
+        .catch((error) => {
+          dispatch({ type: SET_ERRORS, payload: "Server failed to run" });
+          dispatch(onError(error));
+        });
       return;
     }
   };

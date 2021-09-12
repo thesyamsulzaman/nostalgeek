@@ -19,7 +19,6 @@ class StorageService {
 
     fs.unlink(path, (err) => {
       if (err) throw err;
-      console.log(`${fileName} was deleted`);
     });
   }
 

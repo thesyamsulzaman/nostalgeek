@@ -8,6 +8,10 @@ import { getInvitation, editInvitation } from "../../store/actions/invitations";
 import InvitationForm from "./InvitationForm";
 
 class EditInvitation extends Component {
+  componentDidMount() {
+    this.props.getInvitation(this.props.match.params.id);
+  }
+
   onSubmit = (values) => {
     const { title, body, image } = values;
     const formData = new FormData();
@@ -15,7 +19,7 @@ class EditInvitation extends Component {
     formData.append("title", title);
     formData.append("body", body);
 
-    if (image) {
+    if (!!image) {
       formData.append("image", image[0], image[0].name);
       formData.append("oldImageName", this.props.invitation.image);
     }
@@ -28,8 +32,7 @@ class EditInvitation extends Component {
   };
 
   render() {
-    const { imageUrl, ...rest } = this.props.invitation;
-    console.log(this.props.invitation);
+    const { imageUrl, title, body } = this.props.invitation;
 
     return (
       <SidebarWrapper>
@@ -52,7 +55,7 @@ class EditInvitation extends Component {
           <InvitationForm
             onSubmit={this.onSubmit}
             loading={this.props.loading}
-            initialValues={{ ...rest }}
+            initialValues={{ title, body }}
           />
         </Container>
       </SidebarWrapper>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Form as FinalForm, Field } from "react-final-form";
-import { Container, Header, Form, Message, Button } from "semantic-ui-react";
+import { Form, Message, Button } from "semantic-ui-react";
 import PropTypes from "prop-types";
 
 class InvitationForm extends Component {
@@ -11,7 +11,7 @@ class InvitationForm extends Component {
       <FinalForm
         initialValues={initialValues}
         onSubmit={onSubmit}
-        render={({ handleSubmit, form, submitting, pristine, values }) => (
+        render={({ handleSubmit }) => (
           <Form error onSubmit={handleSubmit}>
             <Field name="title" validate={required}>
               {({ input, meta }) => (

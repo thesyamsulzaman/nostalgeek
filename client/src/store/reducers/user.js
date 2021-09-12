@@ -8,7 +8,9 @@ import {
 import {
   CREATE_INVITATION,
   DELETE_INVITATION,
+  EDIT_INVITATION,
   LIKE_INVITATION,
+  SET_INVITATION,
   UNLIKE_INVITATION,
 } from "../constants/invitations";
 
@@ -57,6 +59,8 @@ const usersReducer = (user = initialState, action) => {
         loading: true,
       };
 
+    case SET_INVITATION:
+    case EDIT_INVITATION:
     case CREATE_INVITATION:
       return {
         ...user,

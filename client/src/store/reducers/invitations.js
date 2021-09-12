@@ -1,15 +1,12 @@
 import {
-  LOADING_INVITATION,
   LOADING_INVITATIONS,
   SET_INVITATIONS,
-  GET_INVITATION,
   CREATE_INVITATION,
   DELETE_INVITATION,
-  EDIT_INVITATION,
   LIKE_INVITATION,
   UNLIKE_INVITATION,
-  ADD_COMMENT_INVITATION,
-  REMOVE_COMMENT_INVITATION,
+  SET_INVITATION,
+  EDIT_INVITATION,
 } from "../constants/invitations";
 
 import { _mapKeys, _omit } from "../../utils/objectsMapper";
@@ -27,6 +24,8 @@ const invitationsReducer = (invitations = initialState, action) => {
     case SET_INVITATIONS:
       return { data: { ..._mapKeys(action.payload, "id") }, loading: false };
 
+    case EDIT_INVITATION:
+    case SET_INVITATION:
     case CREATE_INVITATION:
       return {
         ...invitations,
