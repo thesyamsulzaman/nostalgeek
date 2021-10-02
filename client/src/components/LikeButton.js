@@ -1,19 +1,14 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { Button, Label, Icon } from "semantic-ui-react";
-import { Link } from "react-router-dom";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Button, Label, Icon } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 
-import { likeInvitation, unlikeInvitation } from "../store/actions/invitations";
+import { likeInvitation, unlikeInvitation } from '../store/actions/invitations';
 
 class LikeButton extends Component {
   likedInvitation = () => {
-    if (
-      this.props.user.likes &&
-      this.props.user.likes.find(
-        (like) => like.invitationId === this.props.invitationId
-      )
-    ) {
+    if (this.props.user.likes[this.props.invitationId]) {
       return true;
     } else {
       return false;
@@ -32,7 +27,7 @@ class LikeButton extends Component {
     const { likeCount, authenticated, loading } = this.props;
 
     const likeButton = !authenticated ? (
-      <Button as={Link} to="user/login">
+      <Button as={Link} to="/user/login">
         <Icon name="thumbs up outline" />
         Like
       </Button>
@@ -62,7 +57,6 @@ class LikeButton extends Component {
 LikeButton.propTypes = {
   user: PropTypes.object.isRequired,
   authenticated: PropTypes.bool.isRequired,
-  loading: PropTypes.bool.isRequired,
   invitationId: PropTypes.string.isRequired,
   likeCount: PropTypes.number.isRequired,
 };

@@ -1,20 +1,18 @@
-const { Pool } = require('pg');
-const bcrypt = require('bcrypt');
-const { nanoid } = require('nanoid');
+const { Pool } = require("pg");
+const bcrypt = require("bcrypt");
+const { nanoid } = require("nanoid");
 
-const InvariantError = require('../../exceptions/InvariantError');
-const AuthenticationError = require('../../exceptions/AuthenticationError');
-const NotFoundError = require('../../exceptions/NotFoundError');
-
-const slowRequestMock = require('../../utils/slowRequestMock');
+const InvariantError = require("../../exceptions/InvariantError");
+const AuthenticationError = require("../../exceptions/AuthenticationError");
+const NotFoundError = require("../../exceptions/NotFoundError");
 
 const {
   mapLikeData,
   mapUserData,
   mapInvitationData,
   mapUserInfoData,
-} = require('../../utils/mappers');
-const slowRequest = require('../../utils/slowRequestMock');
+} = require("../../utils/mappers");
+const slowRequest = require("../../utils/slowRequestMock");
 
 class UsersService {
   constructor(storageService, cacheService) {
@@ -23,14 +21,12 @@ class UsersService {
     this._cacheService = cacheService;
   }
 
-  async addUser({
-    fullname, email, password, profile_picture
-  }) {
+  async addUser({ fullname, email, password, profile_picture }) {
     await this.verifyUserByEmail(email);
 
     const id = `user-${nanoid(16)}`;
     const hashedPassword = await bcrypt.hash(password, 10);
-    let profilePictureName = 'default-profile-picture.jpg';
+    let profilePictureName = "default-profile-picture.jpg";
 
     if (profile_picture) {
       profilePictureName = await this._storageService.generateFileName(
@@ -53,7 +49,7 @@ class UsersService {
     // await this._cacheService.delete(`users:${id}`);
 
     if (!result.rowCount) {
-      throw new InvariantError('Registration failed, server error');
+      throw new InvariantError("Registration failed, server error");
     }
 
     return result.rows[0].id;
@@ -61,9 +57,7 @@ class UsersService {
 
   async editUserById(
     userId,
-    {
-      fullname, email, profile_picture, oldProfilePictureName = null
-    }
+    { fullname, email, profile_picture, oldProfilePictureName = null }
   ) {
     let queryText = `
       UPDATE users 
@@ -86,7 +80,7 @@ class UsersService {
         profile_picture.hapi
       );
 
-      if (oldProfilePictureName !== 'default-profile-picture.jpg') {
+      if (oldProfilePictureName !== "default-profile-picture.jpg") {
         await this._storageService.removeFile(oldProfilePictureName);
       }
 
@@ -102,47 +96,50 @@ class UsersService {
     // await this._cacheService.delete(`users:${userId}`);
 
     if (!result.rowCount) {
-      throw new NotFoundError('User is not found');
+      throw new NotFoundError("User is not found");
     }
 
     return result.rows[0].id;
   }
 
   async getUserInfo(userId) {
-    // try {
-    //   const result = //await this._cacheService.get(`users:${userId}`);
-    //   return JSON.parse(result);
-    // } catch (error) {
     const userResult = await this._pool.query(
-      'SELECT id, fullname, email, profile_picture FROM users WHERE id = $1',
-      [userId]
-    );
+      `
+        select 
+          users.id as user_id, 
+          users.fullname as user_fullname, 
+          users.profile_picture as user_profile_picture,
+          users.email as user_email,
 
-    const likesResult = await this._pool.query(
-      'SELECT * FROM likes WHERE owner = $1',
-      [userId]
-    );
+          likes.invitation_id as like_invitation_id,
 
-    const invitationsResult = await this._pool.query(
-      'SELECT * FROM invitations WHERE owner = $1',
+          comments.id as comment_id,
+          comments.invitation_id as comment_invitation_id,
+          comments.body as comment_body,
+
+          invitations.id as invitation_id,
+          invitations.image as invitation_image,
+          invitations.title as invitation_title,
+          invitations.body as invitation_body,
+          invitations.like_count as invitations_like_count,
+          invitations.comment_count as invitations_comment_count,
+          invitations.inserted_at as invitations_inserted_at,
+          invitations.updated_at as invitations_updated_at
+
+        from users
+        left join invitations on invitations.owner = users.id
+        left join likes on likes.owner = users.id
+        left join comments on comments.owner = users.id
+        where users.id = $1;
+      `,
       [userId]
     );
 
     if (!userResult.rowCount) {
-      throw new NotFoundError('User is not found');
+      throw new NotFoundError("User is not found");
     }
-    const slowMockRequest = slowRequest(5000);
 
-    const user = {
-      information: mapUserData(userResult.rows[0]),
-      likes: likesResult.rows.map(mapLikeData),
-      invitations: invitationsResult.rows.map(mapInvitationData),
-    };
-
-    // //await this._cacheService.set(`users:${userId}`, JSON.stringify(user));
-
-    return mapUserInfoData(user);
-    // }
+    return mapUserInfoData(userResult.rows);
   }
 
   async verifyUserCredential(email, password) {
@@ -156,14 +153,14 @@ class UsersService {
     const result = await this._pool.query(query);
 
     if (!result.rowCount) {
-      throw new AuthenticationError('Wrong user credentials');
+      throw new AuthenticationError("Wrong user credentials");
     }
 
     const { id, password: hashedPassword } = result.rows[0];
     const match = await bcrypt.compare(password, hashedPassword);
 
     if (!match) {
-      throw new AuthenticationError('Wrong user credentials');
+      throw new AuthenticationError("Wrong user credentials");
     }
 
     return id;
@@ -181,7 +178,7 @@ class UsersService {
 
     if (result.rowCount > 0) {
       throw new InvariantError(
-        'Registration fail, email has been used by somebody else'
+        "Registration fail, email has been used by somebody else"
       );
     }
   }

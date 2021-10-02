@@ -1,12 +1,16 @@
-import { createStore, combineReducers, applyMiddleware } from "redux";
-import thunk from "redux-thunk";
-import { composeWithDevTools } from "redux-devtools-extension";
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import thunk from 'redux-thunk';
+import dotenv from 'dotenv';
 
-import ui from "./reducers/ui";
-import invitations from "./reducers/invitations";
-import user from "./reducers/user";
+import apiMiddleware from './middlewares/api';
+import invitationsMiddleware from './middlewares/invitations';
+import userMiddleware from './middlewares/user';
 
-import dotenv from "dotenv";
+import ui from './reducers/ui';
+import invitations from './reducers/invitations';
+import user from './reducers/user';
+
 dotenv.config();
 
 const reducers = combineReducers({
@@ -17,5 +21,7 @@ const reducers = combineReducers({
 
 export default createStore(
   reducers,
-  composeWithDevTools(applyMiddleware(thunk))
+  composeWithDevTools(
+    applyMiddleware(apiMiddleware, userMiddleware, invitationsMiddleware, thunk)
+  )
 );

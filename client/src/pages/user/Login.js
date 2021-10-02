@@ -1,18 +1,16 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
-import { Container, Header, Form, Button, Message } from "semantic-ui-react";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import { Container, Header, Form, Button, Message } from 'semantic-ui-react';
 
-import SidebarWrapper from "../../containers/SidebarWrapper";
-
-import { login } from "../../store/actions/user";
+import { login } from '../../store/actions/user';
 
 class Login extends Component {
   state = {
-    email: "",
-    password: "",
-    errors: "",
+    email: '',
+    password: '',
+    errors: null,
   };
 
   componentDidUpdate(prevProps) {
@@ -25,9 +23,8 @@ class Login extends Component {
     e.preventDefault();
     const { email, password } = this.state;
 
-    this.setState({ loading: true });
-    this.props.login({ email, password }, this.props.history);
-    this.setState({ loading: false });
+    // this.props.login({ email, password }, this.props.history);
+    this.props.login({ email, password });
   };
 
   onFieldChangeHandler = (e) => {
@@ -44,48 +41,46 @@ class Login extends Component {
     }
 
     return (
-      <SidebarWrapper>
-        <Container style={{ minHeight: "100vh", padding: "2em 0" }}>
-          <Header as="h1">Login Page</Header>
+      <Container style={{ minHeight: '100vh', padding: '2em 0' }}>
+        <Header as="h1">Login Page</Header>
 
-          <Form error onSubmit={this.onSubmitHandler}>
-            {errors && <Message error header="Login failed" content={errors} />}
+        <Form error onSubmit={this.onSubmitHandler}>
+          {errors && <Message error header="Login failed" content={errors} />}
 
-            <Form.Field>
-              <label>Email </label>
-              <input
-                name="email"
-                placeholder="Email"
-                type="email"
-                autoComplete="off"
-                value={email}
-                onChange={this.onFieldChangeHandler}
-              />
-            </Form.Field>
-            <Form.Field>
-              <label>Password </label>
-              <input
-                name="password"
-                placeholder="****"
-                type="password"
-                autoComplete="off"
-                value={password}
-                onChange={this.onFieldChangeHandler}
-              />
-            </Form.Field>
+          <Form.Field>
+            <label>Email </label>
+            <input
+              name="email"
+              placeholder="Email"
+              type="email"
+              autoComplete="off"
+              value={email}
+              onChange={this.onFieldChangeHandler}
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Password </label>
+            <input
+              name="password"
+              placeholder="****"
+              type="password"
+              autoComplete="off"
+              value={password}
+              onChange={this.onFieldChangeHandler}
+            />
+          </Form.Field>
 
-            <Button
-              type="submit"
-              color="violet"
-              style={{ width: "100%" }}
-              size="medium"
-              loading={loading}
-            >
-              Submit
-            </Button>
-          </Form>
-        </Container>
-      </SidebarWrapper>
+          <Button
+            type="submit"
+            color="violet"
+            style={{ width: '100%' }}
+            size="medium"
+            loading={loading}
+          >
+            Submit
+          </Button>
+        </Form>
+      </Container>
     );
   }
 }

@@ -1,10 +1,10 @@
-import React from "react";
-import { Menu, Sidebar } from "semantic-ui-react";
-import { NavLink } from "react-router-dom";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React from 'react';
+import { Menu, Sidebar } from 'semantic-ui-react';
+import { NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import { logout } from "../store/actions/user";
+import { logout } from '../store/actions/user';
 
 function SidebarMenu({ isOpened, onSidebarHide, authenticated, logout }) {
   return (
@@ -16,7 +16,7 @@ function SidebarMenu({ isOpened, onSidebarHide, authenticated, logout }) {
       vertical
       visible={isOpened}
     >
-      <Menu.Item as="a" style={{ fontSize: "1.5rem", textAlign: "center" }}>
+      <Menu.Item as="a" style={{ fontSize: '1.5rem', textAlign: 'center' }}>
         NostalGeek
       </Menu.Item>
 
@@ -25,7 +25,7 @@ function SidebarMenu({ isOpened, onSidebarHide, authenticated, logout }) {
       </Menu.Item>
 
       <Menu.Item>
-        <hr style={{ margin: ".5em 0" }} />
+        <hr style={{ margin: '.5em 0' }} />
       </Menu.Item>
 
       {authenticated ? (

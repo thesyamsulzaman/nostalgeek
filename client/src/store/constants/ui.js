@@ -1,3 +1,4 @@
-export const SET_ERRORS = "SET_ERRORS";
-export const LOADING_UI = "LOADING_UI";
-export const CLEAR_ERRORS = "CLEAR_ERRORS";
+export const SET_ERRORS = "[ui] ERRORS_OCCURED";
+export const CLEAR_ERRORS = "[ui] CLEAR_ERRORS";
+
+export const LOADING_UI = "[app] LOADING_UI";

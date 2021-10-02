@@ -14,29 +14,38 @@ class CommentsHandler {
     const { id: ownerId } = request.auth.credentials;
     const { invitationId } = request.params;
 
-    const commentId = await this._service.addComment(
-      { body, invitationId, ownerId }
-    );
+    const invitation = await this._service.addComment({
+      body,
+      invitationId,
+      ownerId,
+    });
 
-    return h.response({
-      status: 'success',
-      message: 'Comment has been successfully added',
-      data: {
-        commentId
-      }
-    }).code(201);
+    return h
+      .response({
+        status: "success",
+        message: "Comment has been successfully added",
+        data: invitation,
+      })
+      .code(201);
   }
 
   async deleteCommentHandler(request, h) {
     const { id: ownerId } = request.auth.credentials;
-    const { invitationId } = request.params;
+    const { invitationId, commentId } = request.params;
 
-    await this._service.deleteComment(invitationId, ownerId);
+    const invitation = await this._service.deleteComment({
+      invitationId,
+      ownerId,
+      commentId,
+    });
 
-    return h.response({
-      status: 'success',
-      message: 'Comment has been successfully deleted'
-    }).code(203);
+    return h
+      .response({
+        status: "success",
+        message: "Comment has been successfully deleted",
+        data: invitation,
+      })
+      .code(203);
   }
 }
 

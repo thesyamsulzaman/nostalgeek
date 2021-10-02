@@ -1,11 +1,10 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import { Container, Header, Image } from "semantic-ui-react";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { Container, Header, Image } from 'semantic-ui-react';
 
-import SidebarWrapper from "../../containers/SidebarWrapper";
-import { getInvitation, editInvitation } from "../../store/actions/invitations";
-import InvitationForm from "./InvitationForm";
+import { getInvitation, editInvitation } from '../../store/actions/invitations';
+import InvitationForm from './InvitationForm';
 
 class EditInvitation extends Component {
   componentDidMount() {
@@ -16,49 +15,43 @@ class EditInvitation extends Component {
     const { title, body, image } = values;
     const formData = new FormData();
 
-    formData.append("title", title);
-    formData.append("body", body);
+    formData.append('title', title);
+    formData.append('body', body);
 
     if (!!image) {
-      formData.append("image", image[0], image[0].name);
-      formData.append("oldImageName", this.props.invitation.image);
+      formData.append('image', image[0], image[0].name);
+      formData.append('oldImageName', this.props.invitation.image);
     }
 
-    this.props.editInvitation(
-      this.props.match.params.id,
-      formData,
-      this.props.history
-    );
+    this.props.editInvitation(this.props.match.params.id, formData);
   };
 
   render() {
     const { imageUrl, title, body } = this.props.invitation;
 
     return (
-      <SidebarWrapper>
-        <Container style={{ minHeight: "100vh", padding: "1em 0" }}>
-          <Header as="h1">Edit Invitation</Header>
-          <Link to="/user/profile">Back to Profile</Link>
-          <div>
-            <Image
-              src={imageUrl}
-              size="medium"
-              style={{
-                width: "100%",
-                height: "150px",
-                objectFit: "cover",
-                margin: "1em 0",
-              }}
-            />
-          </div>
-
-          <InvitationForm
-            onSubmit={this.onSubmit}
-            loading={this.props.loading}
-            initialValues={{ title, body }}
+      <Container style={{ minHeight: '100vh', padding: '1em 0' }}>
+        <Header as="h1">Edit Invitation</Header>
+        <Link to="/user/profile">Back to Profile</Link>
+        <div>
+          <Image
+            src={imageUrl}
+            size="medium"
+            style={{
+              width: '100%',
+              height: '150px',
+              objectFit: 'cover',
+              margin: '1em 0',
+            }}
           />
-        </Container>
-      </SidebarWrapper>
+        </div>
+
+        <InvitationForm
+          onSubmit={this.onSubmit}
+          loading={this.props.loading}
+          initialValues={{ title, body }}
+        />
+      </Container>
     );
   }
 }

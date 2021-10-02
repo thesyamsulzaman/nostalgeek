@@ -1,27 +1,33 @@
+/* eslint-disable no-undef */
 import {
-  SET_USER,
+  USER_LOADED,
   SET_AUTHENTICATED,
   SET_UNAUTHENTICATED,
   LOADING_USER,
   EDIT_USER,
-} from "../constants/user";
+  UPDATE_USER,
+  LOGOUT_USER,
+} from '../constants/user';
 
 import {
   CREATE_INVITATION,
   DELETE_INVITATION,
   EDIT_INVITATION,
   LIKE_INVITATION,
-  SET_INVITATION,
+  INVITATION_LOADED,
   UNLIKE_INVITATION,
-} from "../constants/invitations";
+  ADD_COMMENT,
+  REMOVE_COMMENT,
+} from '../constants/invitations';
 
-import { _mapKeys, _omit } from "../../utils/objectsMapper";
+import { _mapKeys, _omit } from '../../utils/objectsMapper';
 
 const initialState = {
-  accessToken: localStorage.getItem("accessToken"),
+  accessToken: localStorage.getItem('accessToken'),
   authenticated: false,
   information: {},
-  likes: [],
+  likes: {},
+  comments: {},
   invitations: {},
   notifications: [],
   loading: false,
@@ -30,17 +36,11 @@ const initialState = {
 
 const usersReducer = (user = initialState, action) => {
   switch (action.type) {
+    case UPDATE_USER:
     case EDIT_USER:
-    case SET_USER:
       return {
         ...user,
         ...action.payload,
-        invitations: {
-          ...user.invitations,
-          ...(action.payload.invitations
-            ? _mapKeys(action.payload.invitations, "id")
-            : null),
-        },
         authenticated: true,
         loading: false,
       };
@@ -53,6 +53,7 @@ const usersReducer = (user = initialState, action) => {
       };
 
     case SET_UNAUTHENTICATED:
+    case LOGOUT_USER:
       return initialState;
 
     case LOADING_USER:
@@ -61,35 +62,52 @@ const usersReducer = (user = initialState, action) => {
         loading: true,
       };
 
-    case DELETE_INVITATION:
-      return {
-        ...user,
-        invitations: {
-          ..._omit(user.invitations, action.payload.id),
-        },
-      };
-
-    case SET_INVITATION:
-    case EDIT_INVITATION:
     case CREATE_INVITATION:
+    case EDIT_INVITATION:
       return {
         ...user,
         invitations: {
           ...user.invitations,
+          ...(action.payload.owner === user.information.id && {
+            [action.payload.id]: action.payload,
+          }),
+        },
+      };
+
+    case DELETE_INVITATION:
+      return {
+        ...user,
+        invitations: {
+          ..._omit(user.invitations, action.payload),
+        },
+      };
+
+    case ADD_COMMENT:
+      return {
+        ...user,
+        comments: {
+          ...user.comments,
           [action.payload.id]: action.payload,
         },
+      };
+
+    case REMOVE_COMMENT:
+      return {
+        ...user,
+        comments: _omit(user.comments, action.payload.id),
       };
 
     case LIKE_INVITATION:
       return {
         ...user,
-        likes: [
+        likes: {
           ...user.likes,
-          {
+          [action.payload.id]: {
             invitationId: action.payload.id,
             owner: user.information.id,
           },
-        ],
+        },
+
         invitations: {
           ...user.invitations,
           ...(!!user.invitations[action.payload.id] && {
@@ -101,9 +119,7 @@ const usersReducer = (user = initialState, action) => {
     case UNLIKE_INVITATION:
       return {
         ...user,
-        likes: user.likes.filter(
-          (like) => like.invitationId !== action.payload.id
-        ),
+        likes: _omit(user.likes, action.payload.id),
         invitations: {
           ...user.invitations,
           ...(!!user.invitations[action.payload.id] && {

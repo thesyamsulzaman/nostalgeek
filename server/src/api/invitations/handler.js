@@ -27,7 +27,7 @@ class InvitationsHandler {
       image,
       owner: ownerId,
       likeCount: 0,
-      commentCount: 0,
+      commentCount: 0
     });
 
     return h

@@ -1,3 +1,4 @@
+import { API_START, API_FINISH } from "../constants/api";
 import { SET_ERRORS, CLEAR_ERRORS, LOADING_UI } from "../constants/ui";
 
 const initialState = {
@@ -21,10 +22,17 @@ const uiReducer = (ui = initialState, action) => {
         errors: null,
       };
 
+    case API_START:
     case LOADING_UI:
       return {
         ...ui,
         loading: true,
+      };
+
+    case API_FINISH:
+      return {
+        ...ui,
+        loading: false,
       };
 
     default:

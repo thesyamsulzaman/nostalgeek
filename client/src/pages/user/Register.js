@@ -1,21 +1,19 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import { Redirect } from "react-router-dom";
-import { Container, Header, Form, Button, Message } from "semantic-ui-react";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
+import { Container, Header, Form, Button, Message } from 'semantic-ui-react';
 
-import SidebarWrapper from "../../containers/SidebarWrapper";
-
-import { register } from "../../store/actions/user";
+import { register } from '../../store/actions/user';
 
 class Register extends Component {
   state = {
-    fullname: "",
-    email: "",
-    password: "",
-    confirm_password: "",
+    fullname: '',
+    email: '',
+    password: '',
+    confirm_password: '',
     profile_picture: null,
-    errors: "",
+    errors: '',
   };
 
   componentDidUpdate(prevProps) {
@@ -31,13 +29,13 @@ class Register extends Component {
       this.state;
 
     const formData = new FormData();
-    formData.append("fullname", fullname);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("confirm_password", confirm_password);
+    formData.append('fullname', fullname);
+    formData.append('email', email);
+    formData.append('password', password);
+    formData.append('confirm_password', confirm_password);
 
     if (profile_picture) {
-      formData.append("profile_picture", profile_picture, profile_picture.name);
+      formData.append('profile_picture', profile_picture, profile_picture.name);
     }
 
     this.props.register(formData, this.props.history);
@@ -61,82 +59,80 @@ class Register extends Component {
     }
 
     return (
-      <SidebarWrapper>
-        <Container style={{ minHeight: "100vh", padding: "2em 0" }}>
-          <Header as="h1">Register Page</Header>
+      <Container style={{ minHeight: '100vh', padding: '2em 0' }}>
+        <Header as="h1">Register Page</Header>
 
-          <Form error onSubmit={this.onSubmitHandler}>
-            {errors && <Message error header="Login failed" content={errors} />}
+        <Form error onSubmit={this.onSubmitHandler}>
+          {errors && <Message error header="Login failed" content={errors} />}
 
-            <Form.Field>
-              <label>Fullname * </label>
-              <input
-                name="fullname"
-                placeholder="Fullname"
-                type="text"
-                autoComplete="off"
-                value={fullname}
-                onChange={this.onFieldChangeHandler}
-              />
-            </Form.Field>
+          <Form.Field>
+            <label>Fullname * </label>
+            <input
+              name="fullname"
+              placeholder="Fullname"
+              type="text"
+              autoComplete="off"
+              value={fullname}
+              onChange={this.onFieldChangeHandler}
+            />
+          </Form.Field>
 
-            <Form.Field>
-              <label>Email * </label>
-              <input
-                name="email"
-                placeholder="Email"
-                type="email"
-                autoComplete="off"
-                value={email}
-                onChange={this.onFieldChangeHandler}
-              />
-            </Form.Field>
+          <Form.Field>
+            <label>Email * </label>
+            <input
+              name="email"
+              placeholder="Email"
+              type="email"
+              autoComplete="off"
+              value={email}
+              onChange={this.onFieldChangeHandler}
+            />
+          </Form.Field>
 
-            <Form.Field>
-              <label>Password * </label>
-              <input
-                name="password"
-                placeholder="****"
-                type="password"
-                autoComplete="off"
-                value={password}
-                onChange={this.onFieldChangeHandler}
-              />
-            </Form.Field>
+          <Form.Field>
+            <label>Password * </label>
+            <input
+              name="password"
+              placeholder="****"
+              type="password"
+              autoComplete="off"
+              value={password}
+              onChange={this.onFieldChangeHandler}
+            />
+          </Form.Field>
 
-            <Form.Field>
-              <label>Confirm Password * </label>
-              <input
-                name="confirm_password"
-                placeholder="****"
-                type="password"
-                autoComplete="off"
-                value={confirm_password}
-                onChange={this.onFieldChangeHandler}
-              />
-            </Form.Field>
+          <Form.Field>
+            <label>Confirm Password * </label>
+            <input
+              name="confirm_password"
+              placeholder="****"
+              type="password"
+              autoComplete="off"
+              value={confirm_password}
+              onChange={this.onFieldChangeHandler}
+            />
+          </Form.Field>
 
-            <Form.Field>
-              <label>Profile Picture </label>
-              <input
-                name="profile_picture"
-                type="file"
-                onChange={this.onFileUploadChangeHandler}
-              />
-            </Form.Field>
+          <Form.Field>
+            <label>Profile Picture </label>
+            <input
+              name="profile_picture"
+              type="file"
+              onChange={this.onFileUploadChangeHandler}
+            />
+          </Form.Field>
 
-            <Button
-              type="submit"
-              color="violet"
-              style={{ width: "100%" }}
-              size="medium"
-              loading={loading}
-            >
-              Submit
-            </Button>
-          </Form>
-        </Container>
-      </SidebarWrapper>
+          <Button
+            type="submit"
+            color="violet"
+            style={{ width: '100%' }}
+            size="medium"
+            loading={loading}
+          >
+            Submit
+          </Button>
+        </Form>
+      </Container>
     );
   }
 }

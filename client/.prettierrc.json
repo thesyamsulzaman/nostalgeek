@@ -5,6 +5,7 @@
   "objectCurlyNewline": true,
   "commaDangle": false,
   "object-curly-newline": true,
-  "trailingComma": 'es5',
+  "trailingComma": "es5",
   "semi": true,
+  "operatorLinebreak": true
 }
