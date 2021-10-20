@@ -49,7 +49,6 @@ exports.getInvitationDetail = async (invitationId) => {
   if (!invitation.rowCount) {
     throw new InvariantError("Invitation not found");
   }
-
   return mapInvitationDetail(invitation.rows);
 };
 

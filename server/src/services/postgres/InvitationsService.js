@@ -88,7 +88,6 @@ class InvitationsService {
 
   async getInvitationById(invitationId) {
     const invitation = await getInvitationDetail(invitationId);
-
     return invitation;
   }
 

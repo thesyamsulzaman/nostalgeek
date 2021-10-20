@@ -82,39 +82,42 @@ const mapUserInfoData = (user) => {
     };
 
     accumulator.invitations = accumulator["invitations"] || [];
-    accumulator.invitations.push(
-      mapInvitationData({
-        id: invitation_id,
-        image: invitation_image,
-        fullname: user_fullname,
-        title: invitation_title,
-        body: invitation_body,
-        like_count: invitations_like_count,
-        comment_count: invitations_comment_count,
-        inserted_at: invitations_inserted_at,
-        updated_at: invitations_updated_at,
-      })
-    );
+    invitation_id &&
+      accumulator.invitations.push(
+        mapInvitationData({
+          id: invitation_id,
+          image: invitation_image,
+          fullname: user_fullname,
+          title: invitation_title,
+          body: invitation_body,
+          like_count: invitations_like_count,
+          comment_count: invitations_comment_count,
+          inserted_at: invitations_inserted_at,
+          updated_at: invitations_updated_at,
+        })
+      );
 
     accumulator.likes = accumulator["likes"] || [];
-    accumulator.likes.push(
-      mapLikeData({
-        invitation_id: like_invitation_id,
-        owner: user_id,
-      })
-    );
+    like_invitation_id &&
+      accumulator.likes.push(
+        mapLikeData({
+          invitation_id: like_invitation_id,
+          owner: user_id,
+        })
+      );
 
     accumulator.comments = accumulator["comments"] || [];
-    accumulator.comments.push(
-      mapCommentData({
-        id: comment_id,
-        invitation_id: comment_invitation_id,
-        body: comment_body,
-        owner: user_id,
-        profile_picture: user_profile_picture,
-        fullname: user_fullname,
-      })
-    );
+    comment_id &&
+      accumulator.comments.push(
+        mapCommentData({
+          id: comment_id,
+          invitation_id: comment_invitation_id,
+          body: comment_body,
+          owner: user_id,
+          profile_picture: user_profile_picture,
+          fullname: user_fullname,
+        })
+      );
 
     return accumulator;
   }, {});
