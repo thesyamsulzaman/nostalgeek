@@ -3,6 +3,7 @@ import { Router, Route, Switch } from 'react-router-dom';
 import history from './lib/history';
 
 import Home from './pages/Home';
+import GroupChat from './pages/GroupChat';
 
 import Login from './pages/user/Login';
 import Register from './pages/user/Register';
@@ -34,6 +35,7 @@ class App extends Component {
             <Route exact path="/user/login" component={Login} />
             <Route exact path="/user/register" component={Register} />
 
+            <PrivateRoute exact path="/chat/:query" component={GroupChat} />
             <PrivateRoute exact path="/user/profile" component={Profile} />
             <PrivateRoute
               exact

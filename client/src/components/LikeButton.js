@@ -24,7 +24,7 @@ class LikeButton extends Component {
   };
 
   render() {
-    const { likeCount, authenticated, loading } = this.props;
+    const { likeCount, authenticated, loading, style } = this.props;
 
     const likeButton = !authenticated ? (
       <Button as={Link} to="/user/login">
@@ -44,7 +44,7 @@ class LikeButton extends Component {
     );
 
     return (
-      <Button as="div" labelPosition="left">
+      <Button as="div" labelPosition="left" style={style}>
         <Label as="a" basic pointing="right">
           {likeCount}
         </Label>

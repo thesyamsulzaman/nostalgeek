@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Container, Header, Image } from 'semantic-ui-react';
 
-import CommentsContainer from '../../containers/CommentsContainer';
-
 import { getInvitation } from '../../store/actions/invitations';
+
+import CommentsContainer from '../../containers/CommentsContainer';
 import LikeButton from '../../components/LikeButton';
+import JoinGroupButton from '../../components/JoinGroupButton';
 
 export class ShowInvitation extends Component {
   componentDidMount() {
@@ -38,10 +39,21 @@ export class ShowInvitation extends Component {
         <Header as="h2">{title} </Header>
         <p>{body}</p>
 
-        <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-          <div style={{ marginRight: '.5em' }}>
-            <LikeButton key={id} likeCount={likeCount} invitationId={id} />
-          </div>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            flex: 1,
+          }}
+        >
+          <LikeButton
+            key={id}
+            likeCount={likeCount}
+            invitationId={id}
+            style={{ marginRight: '.5em' }}
+          />
+
+          <JoinGroupButton />
         </div>
 
         <CommentsContainer
